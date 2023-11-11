@@ -7,6 +7,6 @@ app.get('/', (req, res) =>{ //Si vamos a nuestra pagina principal contestamos co
     res.send('<h1>Esto es el chat</h1>')
 })
 
-app.listen(puerto, ()=>{ //Inicalizar el servidor web 
+app.listen(puerto, ()=>{ //Inicalizar el servidor web prueba
     console.log(`Servidor corriendo en el puerto ${puerto}`)
 })
