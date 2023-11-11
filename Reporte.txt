@@ -1,0 +1,14 @@
+Reporte proyecto web-socket:
+Se esta utilizando el framework Node.js como nuestro backend y como frontend se esta utilizando HTML y CSS.
+En el package.json de Node.js se instaló express el cual es un framework para infrestructuras web y también se instaló morgan el cual es una dependencia de express que nos da información sobre las peticiones y maneja los errores.
+En package.json hemos creado una clave:valor, siendo la clave dev y su valor un comando para actualizar la aplicación cada vez que haya un cambio.
+Se a creado un archivo index.js:
+Se importa express, morgan y logger, este último nos da información sobre las peticiones, ya que viene de morgan.
+Se creó una variable constante llamada puerto en esta asignamos el puerto 50000.
+Inicializamos en una variable llamada app nuestra aplicación express.
+Llamamos al método use con el middleware "logger" con la opción 'dev' Esto nos permite reastrear las solicitudes entrantos(GET, POST), nos da la latencia de respuesta e información sobre errores.
+Lamamos al método get la cual tendra las solicitudes y respuestas como argumento, dentro del método enviamos el archivo HTML al servidor.
+Llamamos al método listen que sirve para escuchar al servidor por un puerto definido.
+
+Se crea el archivo index.html:
+Creamos un formulario con un boton y le damos estilos CSS con la etiqueta style.
