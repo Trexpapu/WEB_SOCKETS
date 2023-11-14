@@ -11,17 +11,17 @@ const server =createServer(app) //Creando servidor http
 const io = new Server(server) //Creando servidor io
 
 //Conexion del web socket
-io.on('conexion', () => {
+io.on('connection', () => {//permite escuhcas las connexiones de los clientes
     console.log('Un usuario se a conectado')
 })
 
 app.use(logger('dev')) //en un servidor Express.js configura un middleware llamado "logger" que se utiliza para registrar información sobre las peticiones HTTP que llegan al servidor.
 //(Registros de solicitudes entrantes, Tiempo de respuesta, Informacion sobre errores)
 
-app.get('/', (req, res) =>{ //Si vamos a nuestra pagina principal contestamos con esta funcion que dice este mensaje
+app.get('/', (req, res) =>{
     res.sendFile(process.cwd() + '/cliente/index.html')//vamos a enviar un archivo donde se inicial el proceso es decir el index.html
 })
 
-server.listen(puerto, ()=>{ //Inicalizar el servidor web prueba, escuchamos al servidor
+server.listen(puerto, ()=>{ // escuchamos al servidor
     console.log(`Servidor corriendo en el puerto ${puerto}`)
 })

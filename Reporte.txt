@@ -20,3 +20,6 @@ Creamos constantes para crear el servidor io y el servidor http.
 En la linea 25, en luugar de escuchar a la app, escuchamos a el servidor para tener todo en un mismo servidor, incluyendo los web sockets
 Problemar al importar el servidor web socket y https
 En el cliente:
+
+Se importa en index.html socket.io
+Se crea un socket para el cliente
