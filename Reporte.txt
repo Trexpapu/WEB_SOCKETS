@@ -13,3 +13,10 @@ Llamamos al método listen que sirve para escuchar al servidor por un puerto def
 Se crea el archivo index.html:
 Creamos un formulario con un boton y le damos estilos CSS con la etiqueta style.
 
+En el servidor:
+Instalacion de socket.io con npm install socket.io -E
+Realizar la creacion de servidor web socket y tambien la creacion de servirdor http
+Creamos constantes para crear el servidor io y el servidor http.
+En la linea 25, en luugar de escuchar a la app, escuchamos a el servidor para tener todo en un mismo servidor, incluyendo los web sockets
+Problemar al importar el servidor web socket y https
+En el cliente:
