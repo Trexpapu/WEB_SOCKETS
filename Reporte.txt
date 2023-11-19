@@ -23,3 +23,19 @@ En el cliente:
 
 Se importa en index.html socket.io
 Se crea un socket para el cliente
+Se sabe cuando un usuario se desconecta
+
+tenemos en css estilo del chat, formulario e input 
+
+Se agrego funcionamiento al boton enviar, el socket cliente ya envia informacion 
+
+Vamos a preparar el servidor para los mensajes
+
+
+Vamos hacer que el sevidor haga un broadcast
+
+
+El servidor hace broadcast, ahora todos los clientes ven los mensajes que un cliente manda
+
+Recuperar mensajes perdidos
+
