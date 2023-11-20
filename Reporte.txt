@@ -39,3 +39,14 @@ El servidor hace broadcast, ahora todos los clientes ven los mensajes que un cli
 
 Recuperar mensajes perdidos
 
+Base de datos turso
+En CLI:
+curl -sSfL https://get.tur.so/install.sh | bash
+
+URL de la base de datos:
+ libsql://honest-weapon-x-xxnightmarexx25.turso.io
+
+token:
+eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOiIyMDIzLTExLTIwVDAyOjQ1OjMzLjA5Mjk0NTMxNloiLCJpZCI6ImFjM2UxMDRhLTg3NGMtMTFlZS04MDk4LTVlNGVlZjhjZGY3ZSJ9.-VskXRrZ5hQLBUJifLPDKzCI7D3Drb9rKUUjSZcO5HUvnyJqhSeBZvD2laXwS-lgvExkqqtcWYNkX0ZbmKzYAw
+
+
