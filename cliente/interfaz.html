@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chats</title>
+    <script type="module">
+        import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'; // importamos io para crear el socket del cliente
+        const socket = io(); // creamos nuestro socket con io
+
+        socket.on('redirect', () => {
+            console.log("Te vas a chat grupal")
+            window.location.href='/grupo';
+          
+        
+        });
+
+        document.getElementById('btnChatGrupal').addEventListener('click', () => {
+            socket.emit('Chat grupal');
+        });
+
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const clientesConectados = document.getElementById('clientesConectados');
+
+            // Agregar un listener de clic a la lista de usuarios
+            clientesConectados.addEventListener('click', (event) => {
+                // Obtener el ID del usuario al que se le hizo clic
+                const idUsuario = event.target.textContent.split(' ')[1];
+
+                if (idUsuario) {
+                    console.log(`Clic en Usuario con ID: ${idUsuario}`);
+                }
+            });
+
+            socket.on('updateUsersList', (userList) => {
+                updateUsersList(userList);
+            });
+
+            function updateUsersList(userList) {
+                // Limpiar la lista existente
+                clientesConectados.innerHTML = '';
+
+                // Agregar usuarios a la lista
+                userList.forEach((userId) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Usuario ${userId}`;
+                    clientesConectados.appendChild(listItem);
+        });
+    }
+
+
+    
+
+});
+
+    
+    </script>
+    <style>
+        body {
+            background-color: #010D23;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            padding: 30px 20px; /* Ajusta el espacio arriba (30px) y a los lados (20px) */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 30vh;
+        }
+
+        h1 {
+            color: #FFFF;
+            text-align: center;
+            margin: 0; /* Asegura que no haya espacio adicional alrededor del título */
+        }
+
+        button {
+            background-color: #09f;
+            color: #fff;
+            border: 0;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        #listaClientes {
+            margin-top: 20px;
+            color: #000000; /* Cambié el color del texto a blanco */
+            background-color: rgb(193, 179, 179); /* Cambié el color de fondo a blanco */
+            border-radius: 10px; /* Añadí bordes redondeados */
+            padding: 10px; /* Añadí espacio interno */
+        }
+
+        #clientesConectados {
+            list-style: none;
+            padding: 0;  
+            text-align: center;
+            margin: 0; /* Añadí margen para que no toque los bordes del contenedor */
+            
+        }
+
+        #clientesConectados li {
+            margin: 5px 0;
+            color : black
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Chats</h1>
+    <button id="btnChatGrupal">Chat Grupal</button>
+
+
+    <div id="listaClientes">
+        <h3>Usuarios Conectados:</h3>
+        <ul id="clientesConectados">
+            
+        </ul>
+    </div>
+</body>
+</html>
