@@ -15,16 +15,17 @@ const io = new Server(server, {
     connectionStateRecovery: {} //recuperar mensajes perdidos cuando no hay conexion
 }) //Creando servidor io
 
-const socketToWindow = new Map();
+const Lista_sockets = new Map();
+const solicitudesPendientes = new Map();
 //Conexion del web socket usuarios
 io.on('connection', (socket) => {//permite escuchar las connexiones de los clientes, recuperamos el socket
     console.log('\nUn usuario se a conectado', socket.id)
-    socketToWindow.set(socket.id, null)
+    Lista_sockets.set(socket.id, socket);
     updateUsersList(); 
 
     socket.on('disconnect', () =>{//cuando un usuario se desconecta
         console.log("\nUn usuario se a desconectado", socket.id)
-        socketToWindow.delete(socket.id);
+        Lista_sockets.delete(socket.id);
         updateUsersList(); 
     })
 
@@ -35,7 +36,7 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
      // Escucha el evento 'ChatGrupal' y realiza la lógica correspondiente
      socket.on('Chat grupal', () => {
         console.log('\nSe ha iniciado un chat grupal', socket.id)
-         socketToWindow.set(socket.id);
+         Lista_sockets.set(socket.id, socket);
     // Enviar el evento solo a este cliente
         socket.emit('redirect');
         
@@ -44,11 +45,44 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
 
     //manejo de actualizacion de la lista 
     function updateUsersList() {
-        const userList = Array.from(socketToWindow.keys());
+        const userList = Array.from(Lista_sockets.keys());
         io.emit('updateUsersList', userList);
     }
 
+    socket.on('Individual_m',(msg) =>{ //el servidor recibe el mensaje del cliente
+        io.emit('Mensaje_individual', msg) 
+        
 
+    })
+
+
+    socket.on('Iniciar chat individual', (id_usuario) => {
+        const socketDestino = Lista_sockets.get(id_usuario);
+        if (socket.id !== id_usuario) {
+            // Verificar si ya hay una solicitud pendiente para este usuario
+            if (!solicitudesPendientes.has(id_usuario)) {
+                // Agregar la solicitud a la lista de solicitudes pendientes
+                solicitudesPendientes.set(id_usuario, socket.id);
+
+                // Enviar la solicitud al usuario de destino
+                socketDestino.emit('Solicitud de chat', {
+                    remitente: socket.id,
+                    
+                });
+            }
+        }
+    })
+
+
+    socket.on('Aceptar chat individual', (id_remitente) => {
+        const socketRemitente = Lista_sockets.get(id_remitente);
+        if (socket.id !== id_remitente) {
+            socket.emit('redirect2')
+            socketRemitente.emit('redirect2')
+            
+        }
+
+    });
 
 })
 
@@ -69,6 +103,7 @@ app.get('/grupo', (req, res) =>{
 })
 
 app.get('/individual', (req, res) =>{
+    // Obtén el ID del socket de la URL
     res.sendFile(process.cwd() + '/cliente/individual.html')//vamos a enviar un archivo html
     
 })

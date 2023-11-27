@@ -15,9 +15,25 @@
         
         });
 
+        socket.on('redirect2', () => {
+            console.log("Te vas a chat individual")
+            window.location.href = `/individual`;
+        })  
+
         document.getElementById('btnChatGrupal').addEventListener('click', () => {
             socket.emit('Chat grupal');
         });
+
+ 
+
+        socket.on('Solicitud de chat', (solicitud) => {
+            const respuesta = window.confirm(`${solicitud.remitente} ¿Aceptar chat?`);
+            if (respuesta) {
+                // Si se acepta la solicitud, enviar un evento al servidor
+                socket.emit('Aceptar chat individual', solicitud.remitente);
+            }
+                });
+
 
 
 
@@ -30,9 +46,16 @@
                 const idUsuario = event.target.textContent.split(' ')[1];
 
                 if (idUsuario) {
+                    //cuando un usuario le da click a otro nombre de usuario
                     console.log(`Clic en Usuario con ID: ${idUsuario}`);
+                    socket.emit('Iniciar chat individual', idUsuario)
+                    
+
                 }
             });
+
+           
+
 
             socket.on('updateUsersList', (userList) => {
                 updateUsersList(userList);
