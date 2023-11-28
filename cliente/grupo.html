@@ -17,6 +17,8 @@
         socket.on('chat message', (msg)=>{
             const item = `<li>${msg}</li>`
             messages.insertAdjacentHTML('beforeend', item)//insertamos el elemento en el html, es decir el mensaje
+            
+            messages.scrollTop = messages.scrollHeight
         })
 
         //le mandamos el texto al socket al presionar input y reseteamos el input
@@ -51,6 +53,10 @@
             list-style-type: none;
             margin: 0;
             padding: 0;
+            overflow-y: scroll;
+            height: 100%;
+            scroll-behavior: smooth;
+            padding-bottom: 48px;
         }
         #messages >li {
             padding: .5rem 1rem;
