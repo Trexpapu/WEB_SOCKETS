@@ -7,25 +7,32 @@
     <script type="module">
         import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'; // importamos io para crear el socket del cliente
         const socket = io(); // creamos nuestro socket con io
-
+        let otro_id
+//redireccionamos al cliente a html chat grupal 
         socket.on('redirect', () => {
             console.log("Te vas a chat grupal")
             window.location.href='/grupo';
           
         
         });
-
-        socket.on('redirect2', () => {
+//hacemos visible el chat individual
+        socket.on('redirect2', (id) => {
             console.log("Te vas a chat individual")
-            window.location.href = `/individual`;
-        })  
+            otro_id = id;
+            console.log(otro_id)
+             // Muestra el chat al recibir el evento 'redirect2'
+            document.getElementById('chat').style.display = 'flex';
+         
+        }) 
+
+        //si el usuario le da click al boton chat grupal
 
         document.getElementById('btnChatGrupal').addEventListener('click', () => {
             socket.emit('Chat grupal');
         });
 
  
-
+//cuando un cliente le llega la solicitud se abre una ventana para aceptar
         socket.on('Solicitud de chat', (solicitud) => {
             const respuesta = window.confirm(`${solicitud.remitente} ¿Aceptar chat?`);
             if (respuesta) {
@@ -55,7 +62,7 @@
             });
 
            
-
+//cuando se recibe el llamada updateUserList llamamnos la funcion actualizar lista con los datos recibidos
 
             socket.on('updateUsersList', (userList) => {
                 updateUsersList(userList);
@@ -73,14 +80,35 @@
         });
     }
 
-
-    
+ 
 
 });
 
+
+//mensajes individuales
+        const form = document.getElementById('form')
+        const input = document.getElementById('input')
+      
+
+        //mensajes
+        const messages = document.getElementById('messages')
+        socket.on('Mensaje_individual', (msg)=>{
+            const item = `<li>${msg}</li>`
+            messages.insertAdjacentHTML('beforeend', item)//insertamos el elemento en el html, es decir el mensaje
+        })
+
+        //le mandamos el texto al socket al presionar input y reseteamos el input
+        form.addEventListener('submit', (e)=>{
+            e.preventDefault()
+            if (input.value){
+                socket.emit('Individual_m', input.value, otro_id)
+                input.value = ''
+            }
+        })  
     
     </script>
     <style>
+        /* Estilo de la lista de usuarios conectados*/
         body {
             background-color: #010D23;
             margin: 0;
@@ -90,7 +118,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 30vh;
+            height: 10vh;
         }
 
         h1 {
@@ -107,6 +135,7 @@
             margin-top: 20px;
             cursor: pointer;
         }
+        
 
         #listaClientes {
             margin-top: 20px;
@@ -129,18 +158,113 @@
             color : black
         }
 
+        
+
+        /* Estilo chat*/
+        *,
+        *::before,
+        *::after{
+            box-sizing: border-box;
+        }
+        :root{
+            color-scheme: light dark;
+        }
+        body{
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+            Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            display: grid;
+            place-content: center;
+            height: 100vh;
+            padding: 36px 36px 100px 36px;
+            grid-template-rows: 1fr;
+        }
+        #messages{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        #messages >li {
+            padding: .5rem 1rem;
+
+        }
+        #messages>li:nth-child(odd){
+            background: #000;
+        }
+        #chat {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(4, 30, 48); /* Ajusta el color de fondo según tu preferencia */
+            z-index: 9999; /* Asegura que el chat esté en la parte superior */
+            display: flex;
+            flex-direction: column;
+            display: none; /* Oculta el chat inicialmente */
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
+        }
+
+        #form {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 48px;
+            padding: 4px;
+        }
+
+        #input {
+            border-radius: 9999px;
+            border: 1px solid #eee;
+            flex: 1;
+            margin: 4px;
+            padding: 0 8px;
+        }
+
+        #form > button {
+            background: #09f;
+            color: #fff;
+            border: 0;
+            margin: 4px;
+            border-radius: 4px;
+        }
+
+        #form > button:hover {
+            background: #0cf;
+        }
+
+
+       
     </style>
 </head>
+
 <body>
     <h1>Chats</h1>
     <button id="btnChatGrupal">Chat Grupal</button>
 
 
     <div id="listaClientes">
-        <h3>Usuarios Conectados:</h3>
+        <h3>Click En Usuarios Conectados:</h3>
         <ul id="clientesConectados">
             
         </ul>
     </div>
+
+
+
+    <div id="chat">
+        <ul id="messages"></ul>
+        <form id="form">
+            <input type="text" name="mensaje" id="input" placeholder="Escribe un mensaje" autocomplete="off" />
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+    
+        
+    
 </body>
 </html>

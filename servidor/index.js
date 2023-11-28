@@ -15,28 +15,28 @@ const io = new Server(server, {
     connectionStateRecovery: {} //recuperar mensajes perdidos cuando no hay conexion
 }) //Creando servidor io
 
-const Lista_sockets = new Map();
+const Lista_sockets = new Map();//lista donde se guarda id y objeto socket
 const solicitudesPendientes = new Map();
 //Conexion del web socket usuarios
 io.on('connection', (socket) => {//permite escuchar las connexiones de los clientes, recuperamos el socket
     console.log('\nUn usuario se a conectado', socket.id)
     Lista_sockets.set(socket.id, socket);
-    updateUsersList(); 
+    updateUsersList(); //Llamamos la funcion cada vez que se conecta un usuario
 
     socket.on('disconnect', () =>{//cuando un usuario se desconecta
         console.log("\nUn usuario se a desconectado", socket.id)
-        Lista_sockets.delete(socket.id);
-        updateUsersList(); 
+        Lista_sockets.delete(socket.id);//borramos de la lista el id del usuario que se salio
+        updateUsersList(); //Llamamos la funcion cada vez que se desconecta un usuario
     })
 
-    socket.on('chat message', async (msg) =>{ //el servidor recibe el mensaje del cliente
-        io.emit('chat message', msg) //hacemos broadcast con el servidor
+    socket.on('chat message', async (msg) =>{ //El servidor recibe una peticion chat message
+        io.emit('chat message', msg) //El servidor emite un broadcast con el mensaje que recibe en la funcion
     })
     
-     // Escucha el evento 'ChatGrupal' y realiza la lógica correspondiente
+     // Cuando un cliente hace la peticion Chat grupal emitimos redirect que redirecciona a otro html
      socket.on('Chat grupal', () => {
         console.log('\nSe ha iniciado un chat grupal', socket.id)
-         Lista_sockets.set(socket.id, socket);
+         Lista_sockets.set(socket.id, socket);//agegamos el socket que se fue a la lista
     // Enviar el evento solo a este cliente
         socket.emit('redirect');
         
@@ -45,18 +45,24 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
 
     //manejo de actualizacion de la lista 
     function updateUsersList() {
-        const userList = Array.from(Lista_sockets.keys());
+        const userList = Array.from(Lista_sockets.keys());//obtenemos solo los id de la lista y hacemos broadcast al evento updateUsersList, pasando las id obtenidas
         io.emit('updateUsersList', userList);
     }
 
-    socket.on('Individual_m',(msg) =>{ //el servidor recibe el mensaje del cliente
-        io.emit('Mensaje_individual', msg) 
+    socket.on('Individual_m',(msg, otro_id) =>{ //cuando un cliente solicita un mensaje individual se recibe el mensaje y el id al cliente receptor
+        const socketDestino = Lista_sockets.get(otro_id);//buscamos el id en la lista para obtener el socket asociado
+        if (socketDestino){
+            socket.emit('Mensaje_individual', msg)//Llamamos el evento mensaje individual para el emisor
+            socketDestino.emit('Mensaje_individual', msg)//igualmente para el receptor
+        }else{
+            socket.emit('Mensaje_individual', "El otro usuario se fue...")//si el emisor manda un mensaje y receptor no existe
+        }
         
 
     })
 
 
-    socket.on('Iniciar chat individual', (id_usuario) => {
+    socket.on('Iniciar chat individual', (id_usuario) => {//cuando un cliente desea iniciar un chat individual se emite al socket destino la solicitud
         const socketDestino = Lista_sockets.get(id_usuario);
         if (socket.id !== id_usuario) {
             // Verificar si ya hay una solicitud pendiente para este usuario
@@ -74,11 +80,11 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
     })
 
 
-    socket.on('Aceptar chat individual', (id_remitente) => {
+    socket.on('Aceptar chat individual', (id_remitente) => {//Si el cliente acepta la solicitud manda el evento redirec2 al cliente solicitante y al que acepta
         const socketRemitente = Lista_sockets.get(id_remitente);
         if (socket.id !== id_remitente) {
-            socket.emit('redirect2')
-            socketRemitente.emit('redirect2')
+            socket.emit('redirect2', id_remitente)
+            socketRemitente.emit('redirect2', socket.id)
             
         }
 
@@ -99,12 +105,6 @@ app.get('/', (req, res) =>{
 
 app.get('/grupo', (req, res) =>{
     res.sendFile(process.cwd() + '/cliente/grupo.html')//vamos a enviar un archivo html
-    
-})
-
-app.get('/individual', (req, res) =>{
-    // Obtén el ID del socket de la URL
-    res.sendFile(process.cwd() + '/cliente/individual.html')//vamos a enviar un archivo html
     
 })
 
