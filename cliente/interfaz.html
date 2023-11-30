@@ -8,6 +8,17 @@
         import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'; // importamos io para crear el socket del cliente
         const socket = io(); // creamos nuestro socket con io
         let otro_id
+        let salida = false
+        let solicitud_pendiente = false
+        //si tu te sales le avisas al otro que te fuiste
+        socket.on('Avisar_que_salio', ()=>{
+            socket.emit('Sali', otro_id)
+        })
+        socket.on('Quedaste_solo', ()=>{
+            alert('El usuario con el que conversabas se fue a otro chat');
+            salida = true
+        })
+
 //redireccionamos al cliente a html chat grupal 
         socket.on('redirect', () => {
             console.log("Te vas a chat grupal")
@@ -39,8 +50,12 @@
                 // Si se acepta la solicitud, enviar un evento al servidor
                 socket.emit('Aceptar chat individual', solicitud.remitente);
             }
+            socket.emit('Liberar solicitud', solicitud.remitente);
                 });
-
+//no permite que un cliente mande multiples solicitudes
+        socket.on('En espera de solicitud de chat', (bool)=>{
+            solicitud_pendiente = bool
+        })
 
 
 
@@ -55,8 +70,9 @@
                 if (idUsuario) {
                     //cuando un usuario le da click a otro nombre de usuario
                     console.log(`Clic en Usuario con ID: ${idUsuario}`);
+                    if (solicitud_pendiente == false){
                     socket.emit('Iniciar chat individual', idUsuario)
-                    
+                    }
 
                 }
             });
@@ -101,7 +117,7 @@
         form.addEventListener('submit', (e)=>{
             e.preventDefault()
             if (input.value){
-                socket.emit('Individual_m', input.value, otro_id)
+                socket.emit('Individual_m', input.value, otro_id, salida)
                 input.value = ''
             }
         })  
