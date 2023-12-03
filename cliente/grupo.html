@@ -14,8 +14,11 @@
 
         //mensajes
         const messages = document.getElementById('messages')
-        socket.on('chat message', (msg)=>{
-            const item = `<li>${msg}</li>`
+        socket.on('chat message', (msg,username)=>{
+            const item = `<li>
+                <p>${msg}</p>
+                <small>${username}</small>
+            </li>`
             messages.insertAdjacentHTML('beforeend', item)//insertamos el elemento en el html, es decir el mensaje
             
             messages.scrollTop = messages.scrollHeight
@@ -57,13 +60,23 @@
             height: 100%;
             scroll-behavior: smooth;
             padding-bottom: 48px;
+            word-wrap: break-word;
         }
         #messages >li {
             padding: .5rem 1rem;
-
+            background: #6D8764;
+            border-radius: 18px 18px 18px 0;
+            margin-right: auto;
+            margin: 15px 0;
+            max-width: calc(100% - 130px);
         }
         #messages>li:nth-child(odd){
-            background: #000;
+            background: #006400;
+            border-radius: 18px 18px 0 18px;
+            margin-left: auto;
+            max-width: calc(100% - 130px);
+
+
         }
         #chat{
             border: 1px solid #ccc;
@@ -96,11 +109,13 @@
         }
 
         #form > button{
-            background: #09f;
+            background:  #6D8764;
             color: #fff;
             border: 0;
             margin: 4px;
             border-radius: 4px;
+            font-size: 19px;
+            cursor: pointer;
         }
 
         #form > button:hover{
@@ -116,7 +131,7 @@
         <form id = "form">
             <input type ="text" name ="mensaje" id = "input" placeholder="Escribe un mensaje"
             autocomplete="off"/>
-            <button type="submit">Enviar</button>
+            <button><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC0ElEQVR4nO2ZS2jUUBSGPx+l4hOh44yKC6sgiIrgpqIbURF3uhAEQVdWRMStC0FxVaTTEe1OcCFIQUHE11JFcOFjY20VBHXhG3xW1IqPkQN/4BLSmWSSZhKZD8JMknvvnJ//5Nx7M9CiRYv/hZnAAeAJcJMcsgQ4CYwAVR2PyQkTgA3AOeC3I8A7zJlMMwPoBoYDgvcOc2YWGWUR0AN8dAJ+BfQDL31CTpDB9NkEXAX+OIFeB7YAJWBQ117o86+emUwwXekz5AQ/CpwBVqhNwRHxCOjV92tkgE6lzwdHwGvgCNDhtCv4RMwHnul8cxPjZ21A9bkP7AQm+9oWfCIsvbbq3OaPiWkHP0WBPvSljwnqGqNPkAjjhq7tb3b6vFH6WKBEFLFMD/iIZvbU0udXQPq01ek7lgjjlK4fJ4X08YKw46cErQ45Ri0Rs4Fv41ly5ylV3jsC3iqlrMKQgAjjoO5dIaX06ZY7JChiEvBc923SjE270udBQPqsaXDMeiKMbUmV3KD0eaf0WRBj3DAijFtqs48Y9Psmr3tyxdwhIRGDNcrxSrX5rNVww3jLgapSainxCSvCOK12FWJS0iDfNaCtTAdiCIoiogD80G8ubvD3AgftUS33BF2W9Uk/Ex6H1PZSzNgTFRRVhC0gvX3HxgTjjyUoqghju9PeNl3jTj1BjYgwbqvPXlKmCJR9ggYiPNguq9Tnk3aQTaFDk+cXp2xHcQJtc62fbWmbzhzgvAIyZ6I4OypHO8kI5s5XBbU8ZJ/DEn+RjNEbwZU2573VejJGUQUgjCs7JGI4rZIblXJIV+6o3R4ySjGEK11OyZ1GhinXceWs7h8j4xRruDJXO03b9ywkB/SN4cpRXb9ATigFuNKuty4mZB05os/nyi6dD2W15IZ15a6E7CaHVJx3AFW9G55KDik5y/2q9jO5pSIRuSm5tVx5qv/MW7RoQbr8A2pLKcu/QDhRAAAAAElFTkSuQmCC"></button>
         </form>
     </section>
 </body>

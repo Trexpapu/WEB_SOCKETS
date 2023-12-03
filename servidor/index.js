@@ -33,7 +33,6 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
     socket.on('chat message', async (msg) =>{ //El servidor recibe una peticion chat message
         io.emit('chat message', msg) //El servidor emite un broadcast con el mensaje que recibe en la funcion
     })
-    
      // Cuando un cliente hace la peticion Chat grupal emitimos redirect que redirecciona a otro html
      socket.on('Chat grupal', () => {
         console.log('\nSe ha iniciado un chat grupal', socket.id)
@@ -42,7 +41,6 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
         socket.emit('redirect');
         
     })
-
 
     //manejo de actualizacion de la lista 
     function updateUsersList() {
@@ -116,6 +114,7 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
     
 
 })
+
 
 
 
