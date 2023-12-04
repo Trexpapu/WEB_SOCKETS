@@ -14,14 +14,19 @@
 
         //mensajes
         const messages = document.getElementById('messages')
-        socket.on('chat message', (msg,username)=>{
-            const item = `<li>
-                <p>${msg}</p>
-                <small>${username}</small>
-            </li>`
-            messages.insertAdjacentHTML('beforeend', item)//insertamos el elemento en el html, es decir el mensaje
+        socket.on('chat message', (msg,id)=>{
+
+            const isSentByCurrentUser=socket.id ===id;
+            const item=document.createElement('li');
+            item.classList.add(isSentByCurrentUser ? 'sent': 'received');
+
+            const messageParagraph = document.createElement('p');
+            messageParagraph.innerHTML= isSentByCurrentUser ? `<span class="user-id"><small>${socket.id}</small>:</span> ${msg}` : `<span class="user-id"><small>${id}</small>:</span> ${msg}`;
+ 
+            item.appendChild(messageParagraph);
             
-            messages.scrollTop = messages.scrollHeight
+            messages.appendChild(item);
+            messages.scrollTop = messages.scrollHeight;
         })
 
         //le mandamos el texto al socket al presionar input y reseteamos el input
@@ -61,6 +66,8 @@
             scroll-behavior: smooth;
             padding-bottom: 48px;
             word-wrap: break-word;
+            display:flex;
+            flex-direction:column;
         }
         #messages >li {
             padding: .5rem 1rem;
@@ -69,15 +76,32 @@
             margin-right: auto;
             margin: 15px 0;
             max-width: calc(100% - 130px);
+            width: max-content;
+            align-self: flex-start;
         }
         #messages>li:nth-child(odd){
             background: #006400;
             border-radius: 18px 18px 0 18px;
             margin-left: auto;
             max-width: calc(100% - 130px);
-
-
+            align-self: flex-end;
+            margin:0;
         }
+        #messages>li.sent {
+            align-self: flex-end; /* Mensajes enviados por el usuario estarán del lado derecho */
+        }
+
+        #messages>li.received {
+            align-self: flex-start; /* Mensajes recibidos por otros usuarios estarán del lado izquierdo */
+        }
+
+        .user-id {/* ... otras propiedades ... */
+            display: inline; /* Mostrar el ID del usuario en los mensajes enviados por el usuario */
+        }
+        #messages>li.sent .user-id {
+            display: none; /* Para ocultar el ID del usuario en los mensajes enviados por el usuario */ 
+        }
+
         #chat{
             border: 1px solid #ccc;
             border-radius: 4px;
