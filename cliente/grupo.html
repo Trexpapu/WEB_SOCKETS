@@ -16,16 +16,22 @@
         const messages = document.getElementById('messages')
         socket.on('chat message', (msg,id)=>{
 
-            const isSentByCurrentUser=socket.id ===id;
-            const item=document.createElement('li');
-            item.classList.add(isSentByCurrentUser ? 'sent': 'received');
+            const isSentByCurrentUser=socket.id ===id; // Verifica si el mensaje es enviado por el usuario actual
+            const item=document.createElement('li'); // Crea un nuevo elemento de lista (list item)
+            item.classList.add(isSentByCurrentUser ? 'sent': 'received'); // Agrega una clase al elemento de lista según si el mensaje es enviado o recibido
 
-            const messageParagraph = document.createElement('p');
+            const messageParagraph = document.createElement('p'); // Crea un nuevo elemento de párrafo para el contenido del mensaje
+
+            // Establece el HTML interno del párrafo según si el mensaje es enviado o recibido
             messageParagraph.innerHTML= isSentByCurrentUser ? `<span class="user-id"><small>${socket.id}</small>:</span> ${msg}` : `<span class="user-id"><small>${id}</small>:</span> ${msg}`;
  
+            // Adjunta el párrafo del mensaje al elemento de lista
             item.appendChild(messageParagraph);
             
+            // Adjunta el elemento de lista al contenedor de mensajes
             messages.appendChild(item);
+
+            // Desplaza el contenedor de mensajes hacia abajo para mostrar el último mensaje
             messages.scrollTop = messages.scrollHeight;
         })
 
@@ -71,32 +77,32 @@
         }
         #messages >li {
             padding: .5rem 1rem;
-            background: #6D8764;
-            border-radius: 18px 18px 18px 0;
             margin-right: auto;
             margin: 15px 0;
-            max-width: calc(100% - 130px);
             width: max-content;
             align-self: flex-start;
         }
         #messages>li:nth-child(odd){
-            background: #006400;
-            border-radius: 18px 18px 0 18px;
             margin-left: auto;
-            max-width: calc(100% - 130px);
             align-self: flex-end;
             margin:0;
         }
         #messages>li.sent {
-            align-self: flex-end; /* Mensajes enviados por el usuario estarán del lado derecho */
+            background: #006400;
+            border-radius: 18px 18px 0 18px;
+            max-width: calc(100% - 130px);
+            align-self: flex-end; /*Mensajes enviados por el usuario estarán del lado derecho */
         }
 
         #messages>li.received {
+            background: #6D8764;
+            border-radius: 18px 18px 18px 0;
+            max-width: calc(100% - 130px);
             align-self: flex-start; /* Mensajes recibidos por otros usuarios estarán del lado izquierdo */
         }
 
-        .user-id {/* ... otras propiedades ... */
-            display: inline; /* Mostrar el ID del usuario en los mensajes enviados por el usuario */
+        .user-id {
+            display: inline; /*Mostrar el ID del usuario en los mensajes enviados por el usuario */
         }
         #messages>li.sent .user-id {
             display: none; /* Para ocultar el ID del usuario en los mensajes enviados por el usuario */ 
@@ -155,7 +161,7 @@
         <form id = "form">
             <input type ="text" name ="mensaje" id = "input" placeholder="Escribe un mensaje"
             autocomplete="off"/>
-            <button><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC0ElEQVR4nO2ZS2jUUBSGPx+l4hOh44yKC6sgiIrgpqIbURF3uhAEQVdWRMStC0FxVaTTEe1OcCFIQUHE11JFcOFjY20VBHXhG3xW1IqPkQN/4BLSmWSSZhKZD8JMknvvnJ//5Nx7M9CiRYv/hZnAAeAJcJMcsgQ4CYwAVR2PyQkTgA3AOeC3I8A7zJlMMwPoBoYDgvcOc2YWGWUR0AN8dAJ+BfQDL31CTpDB9NkEXAX+OIFeB7YAJWBQ117o86+emUwwXekz5AQ/CpwBVqhNwRHxCOjV92tkgE6lzwdHwGvgCNDhtCv4RMwHnul8cxPjZ21A9bkP7AQm+9oWfCIsvbbq3OaPiWkHP0WBPvSljwnqGqNPkAjjhq7tb3b6vFH6WKBEFLFMD/iIZvbU0udXQPq01ek7lgjjlK4fJ4X08YKw46cErQ45Ri0Rs4Fv41ly5ylV3jsC3iqlrMKQgAjjoO5dIaX06ZY7JChiEvBc923SjE270udBQPqsaXDMeiKMbUmV3KD0eaf0WRBj3DAijFtqs48Y9Psmr3tyxdwhIRGDNcrxSrX5rNVww3jLgapSainxCSvCOK12FWJS0iDfNaCtTAdiCIoiogD80G8ubvD3AgftUS33BF2W9Uk/Ex6H1PZSzNgTFRRVhC0gvX3HxgTjjyUoqghju9PeNl3jTj1BjYgwbqvPXlKmCJR9ggYiPNguq9Tnk3aQTaFDk+cXp2xHcQJtc62fbWmbzhzgvAIyZ6I4OypHO8kI5s5XBbU8ZJ/DEn+RjNEbwZU2573VejJGUQUgjCs7JGI4rZIblXJIV+6o3R4ySjGEK11OyZ1GhinXceWs7h8j4xRruDJXO03b9ywkB/SN4cpRXb9ATigFuNKuty4mZB05os/nyi6dD2W15IZ15a6E7CaHVJx3AFW9G55KDik5y/2q9jO5pSIRuSm5tVx5qv/MW7RoQbr8A2pLKcu/QDhRAAAAAElFTkSuQmCC"></button>
+            <button><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC0ElEQVR4nO2ZS2jUUBSGPx+l4hOh44yKC6sgiIrgpqIbURF3uhAEQVdWRMStC0FxVaTTEe1OcCFIQUHE11JFcOFjY20VBHXhG3xW1IqPkQN/4BLSmWSSZhKZD8JMknvvnJ//5Nx7M9CiRYv/hZnAAeAJcJMcsgQ4CYwAVR2PyQkTgA3AOeC3I8A7zJlMMwPoBoYDgvcOc2YWGWUR0AN8dAJ+BfQDL31CTpDB9NkEXAX+OIFeB7YAJWBQ117o86+emUwwXekz5AQ/CpwBVqhNwRHxCOjV92tkgE6lzwdHwGvgCNDhtCv4RMwHnul8cxPjZ21A9bkP7AQm+9oWfCIsvbbq3OaPiWkHP0WBPvSljwnqGqNPkAjjhq7tb3b6vFH6WKBEFLFMD/iIZvbU0udXQPq01ek7lgjjlK4fJ4X08YKw46cErQ45Ri0Rs4Fv41ly5ylV3jsC3iqlrMKQgAjjoO5dIaX06ZY7JChiEvBc923SjE270udBQPqsaXDMeiKMbUmV3KD0eaf0WRBj3DAijFtqs48Y9Psmr3tyxdwhIRGDNcrxSrX5rNVww3jLgapSainxCSvCOK12FWJS0iDfNaCtTAdiCIoiogD80G8ubvD3AgftUS33BF2W9Uk/Ex6H1PZSzNgTFRRVhC0gvX3HxgTjjyUoqghju9PeNl3jTj1BjYgwbqvPXlKmCJR9ggYiPNguq9Tnk3aQTaFDk+cXp2xHcQJtc62fbWmbzhzgvAIyZ6I4OypHO8kI5s5XBbU8ZJ/DEn+RjNEbwZU2573VejJGUQUgjCs7JGI4rZIblXJIV+6o3R4ySjGEK11OyZ1GhinXceWs7h8j4xRruDJXO03b9ywkB/SN4cpRXb9ATigFuNKuty4mZB05os/nyi6dD2W15IZ15a6E7CaHVJx3AFW9G55KDik5y/2q9jO5pSIRuSm5tVx5qv/MW7RoQbr8A2pLKcu/QDhRAAAAAElFTkSuQmCC" width="30"></button>
         </form>
     </section>
 </body>
