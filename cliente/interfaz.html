@@ -148,7 +148,7 @@
             color: #fff;
             border: 0;
             padding: 10px 20px;
-            margin-top: 20px;
+            margin-top: 10px;
             cursor: pointer;
         }
         
@@ -156,7 +156,7 @@
         #listaClientes {
             margin-top: 20px;
             color: #000000; /* Cambié el color del texto a blanco */
-            background-color: rgb(193, 179, 179); /* Cambié el color de fondo a blanco */
+            background-color: rgb(109, 104, 141); /* Cambié el color de fondo a blanco */
             border-radius: 10px; /* Añadí bordes redondeados */
             padding: 10px; /* Añadí espacio interno */
         }
@@ -166,6 +166,7 @@
             padding: 0;  
             text-align: center;
             margin: 0; /* Añadí margen para que no toque los bordes del contenedor */
+            cursor: pointer;
             
         }
 
@@ -258,13 +259,18 @@
     </style>
 </head>
 
+<script type="module">
+    const username = "NombreDeUsuario"; // Reemplaza con el nombre de usuario real
+    // Resto del código...
+</script>
+
 <body>
     <h1>Chats</h1>
     <button id="btnChatGrupal">Chat Grupal</button>
 
 
     <div id="listaClientes">
-        <h3>Click En Usuarios Conectados:</h3>
+        <h3>Da click al usuario con el que quieres tener una conversacion individual:</h3>
         <ul id="clientesConectados">
             
         </ul>
@@ -279,7 +285,13 @@
             <button type="submit">Enviar</button>
         </form>
     </div>
-    
+
+    <script type="module">
+        // Resto del código JS...
+
+        // Actualiza el nombre de usuario en la pantalla
+        document.getElementById('nombreUsuario').textContent = username;
+    </script>
         
     
 </body>

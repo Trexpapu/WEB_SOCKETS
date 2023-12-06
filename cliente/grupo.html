@@ -16,7 +16,7 @@
         const messages = document.getElementById('messages')
         socket.on('chat message', (msg,id)=>{
 
-            const isSentByCurrentUser=socket.id ===id; // Verifica si el mensaje es enviado por el usuario actual
+            const isSentByCurrentUser=socket.id == id; // Verifica si el mensaje es enviado por el usuario actual
             const item=document.createElement('li'); // Crea un nuevo elemento de lista (list item)
             item.classList.add(isSentByCurrentUser ? 'sent': 'received'); // Agrega una clase al elemento de lista según si el mensaje es enviado o recibido
 
