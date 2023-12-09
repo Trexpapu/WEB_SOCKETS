@@ -126,7 +126,7 @@
     <style>
         /* Estilo de la lista de usuarios conectados*/
         body {
-            background-color: #010D23;
+            background-color: #000000;
             margin: 0;
             font-family: Arial, sans-serif;
             padding: 30px 20px; /* Ajusta el espacio arriba (30px) y a los lados (20px) */
@@ -144,7 +144,7 @@
         }
 
         button {
-            background-color: #09f;
+            background-color: #006400;
             color: #fff;
             border: 0;
             padding: 10px 20px;
@@ -153,22 +153,22 @@
         }
         
 
-        #listaClientes {
+        /*#listaClientes {
             margin-top: 20px;
-            color: #000000; /* Cambié el color del texto a blanco */
-            background-color: rgb(109, 104, 141); /* Cambié el color de fondo a blanco */
-            border-radius: 10px; /* Añadí bordes redondeados */
-            padding: 10px; /* Añadí espacio interno */
-        }
+            color: #000000; /* Cambié el color del texto a blanco 
+            background-color: rgb(109, 104, 141); /* Cambié el color de fondo a blanco 
+            border-radius: 10px; /* Añadí bordes redondeados 
+            padding: 10px; /* Añadí espacio interno 
+        }*/
 
-        #clientesConectados {
+        /*#clientesConectados {
             list-style: none;
             padding: 0;  
             text-align: center;
-            margin: 0; /* Añadí margen para que no toque los bordes del contenedor */
+            margin: 0; /* Añadí margen para que no toque los bordes del contenedor 
             cursor: pointer;
             
-        }
+        }*/
 
         #clientesConectados li {
             margin: 5px 0;
@@ -195,6 +195,12 @@
             height: 100vh;
             padding: 36px 36px 100px 36px;
             grid-template-rows: 1fr;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Hace que el contenedor cubra el 100% de la altura de la ventana */
+            margin: 0;
+
         }
         #messages{
             list-style-type: none;
@@ -214,7 +220,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgb(4,30,48); /* Ajusta el color de fondo según tu preferencia */
+            background-color: rgb(0, 0, 0); /* Ajusta el color de fondo según tu preferencia */
             z-index: 9999; /* Asegura que el chat esté en la parte superior */
             display: flex;
             flex-direction: column;
@@ -254,18 +260,46 @@
             background: #0cf;
         }
 
+        .rectangulo {
+            width: 1000px; /* Ancho del rectángulo */
+            height: 600px; /* Altura del rectángulo */
+            background: linear-gradient(to right, #6D8764 50%, #f8f9fa 50%);
+            border-radius: 20px;
+            text-align: center;
+            line-height: 200px;
+            color: #ffffff;
+            position: relative;
+        }
+        .texto_grupal {
+            position: absolute;
+            top: 30%; /* Centrar verticalmente en la mitad del rectángulo */
+            left: 25%; /* Centrar horizontalmente en la mitad del rectángulo */
+            transform: translate(-50%, -50%); /* Ajustar para centrar completamente el texto */
+            font-weight: bold; /* Hacer el texto en negrita */
+            color: #000000; /* Cambiar el color del texto (en este caso, rojo) */
+        }
+        .imagen_grupal {
+            top: 30%; /* Centrar verticalmente en la mitad del rectángulo */
+            left: 25%; /* Centrar horizontalmente en la mitad del rectángulo */
+
+
+
+        }
+
+       
+
 
        
     </style>
 </head>
 
 <body>
-    <h1>Chats</h1>
+    <!--<h1>Chats</h1>-->
     <button id="btnChatGrupal">Chat Grupal</button>
 
 
     <div id="listaClientes">
-        <h3>Da click al usuario con el que quieres tener una conversacion individual:</h3>
+        <!--<h3>Da click al usuario con el que quieres tener una conversacion individual:</h3>-->
         <ul id="clientesConectados">
             
         </ul>
@@ -280,6 +314,14 @@
             <button type="submit">Enviar</button>
         </form>
     </div>
+
+    <div class="rectangulo">
+        <div class="texto_grupal">
+            Chat grupal
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEJElEQVR4nO2aW4iVVRTHf6aOlxAfSsIEH7yhLwmOJYkaoRF4y9AXC3wQQSaxm6USmg8h9pCCDyYVKIgIRgUhPgipo0MpWuMNnOhKUUxpmaaiNtKRJf8Du+N32d/en18q84fFcM7sdduX/157zUA37h08A7QClyT7gVmeuj2BF4B24ApwDvgEGE/FeBuopcjaHN3ewK4U3X+A56pciVqOzMzQX5OjexUYUUUirR6J7EvR7QX84aG/oYpELnoE8neK7ggP3Rpw8E5J5EKK7nDPRA5Ukch+j0D2ZrDVWQ/99VUkMssjkBkZ+qtzdK9o5SrB2oxA3srRtQP/aQb9zqdizBQ7XZTszVmJxi22GPhSK2BM9hEw7jbHfG9juUoMY6jLwClgHTDEQ/cR4H3ge12Av4tEFpQdpO3jhTJuTs4AbUAL0KQx07Utku6Q51Ps9tAZup6g1wXMK+A/F4OALzIOc7sz6y+ljPk3JZn1GXbfCPCfuRJZRupyHOgL3AecSBljBDDYsf1khr1vVUz2Kug/FQs9b16TV3JWpbES3pMxblWE/+Bbuy5fSWd0ygwvA8Y4tscCrwIdCeMfjfCfiDMFDF3V4e2nM2HfXQNe1z2RBtuOL0u/buuhCP+J8KmDak7QZqiPErFbeXYB1nnKYb1BEf4T0VbAkB1yw0h9XhHAOkv0XXOE/0S0FDC0Ujr29v5OqxDCeqccWy0B/hPRpBnLM/I1cL+W9ohu+VDWseBPaxKaCvrPxBDNWJaRYRq7SN+Ni2Cd+tY0livqPxd9NWPtYgc7WCe1nP01ZoraQGb8wQjWaRJZ2OfpBfyXhjedmimGdeqJWK1lHZZSYdT4gZbxkqrbb4AtwFRn3ATgJ6exFsI69hr82WEuwzRgq3xeVgwdqpjtd7kYpYd/XhBt2tvopx3yUNaZ7dgaBXzuodvq6NyCKWpd+gbyFzBJunUGCWGdno7/8wX8/wlMTlqJIkm4yTQ2CkJYZ2TBJGpOMv/pSvpspzQxym1EUdY5GOF/n3uwa5Fib41QTCvB/1TETrGG3m0I7nFgI3AM+E33i7HUJuCJhrGbS/D/HtqzMUbOOu+OocBuD53PnL1tPzsjY+hAzYJQA3YhTlRAzQUDclmnWc+AWqDcbJrHzIRtFcPDwC8B+uec++CdyFiCFY2NHlAQPtspr/M+wLPTX3oiHzsHuxYpT8vWtphEkppsPlLvCm4sIRGrqwzPBupbDje7e0mdjTyxghFRbGwi1jo1jAnQtUfZXJfPrYJ9Uct7WLTcqWy7dDCt0j0EbAcGBrxB8t4mfYCdwFHgV/m8rhg6FdNhxbi07D9nh27NRsnsHFaB7kS4w1bkfAnbqktN7P8VcwJZz+0TV/ZvGz54TG+QHWr1/NDwWLNH2I+i6w+B11SnpbY9u8FdjBvl29Uzg8ilOgAAAABJRU5ErkJggg==">
+        </div>
+    </div>
+
     
 </body>
 </html>
