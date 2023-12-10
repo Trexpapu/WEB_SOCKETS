@@ -14,17 +14,18 @@
 
         //mensajes
         const messages = document.getElementById('messages')
-        socket.on('chat message', (msg,id)=>{
+        socket.on('chat message', (data)=>{
+            const { message, senderId } = data;
 
-            const isSentByCurrentUser=socket.id == id; // Verifica si el mensaje es enviado por el usuario actual
+            const isSentByCurrentUser=socket.id == senderId; // Verifica si el mensaje es enviado por el usuario actual
             const item=document.createElement('li'); // Crea un nuevo elemento de lista (list item)
             item.classList.add(isSentByCurrentUser ? 'sent': 'received'); // Agrega una clase al elemento de lista según si el mensaje es enviado o recibido
 
             const messageParagraph = document.createElement('p'); // Crea un nuevo elemento de párrafo para el contenido del mensaje
 
-            // Establece el HTML interno del párrafo según si el mensaje es enviado o recibido
-            messageParagraph.innerHTML= isSentByCurrentUser ? `<span class="user-id"><small>${socket.id}</small>:</span> ${msg}` : `<span class="user-id"><small>${id}</small>:</span> ${msg}`;
- 
+            // Establece el HTML interno del párrafo según si el mensaje es enviado o recibido-Cambie aqui algo
+            messageParagraph.innerHTML = isSentByCurrentUser ? `<span class="user-id"><small>${socket.id}</small>:</span> ${message}` : `<span class="user-id"><small>${senderId}</small>:</span> ${message}`;
+
             // Adjunta el párrafo del mensaje al elemento de lista
             item.appendChild(messageParagraph);
             

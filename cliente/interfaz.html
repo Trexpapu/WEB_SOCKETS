@@ -60,6 +60,8 @@
 
 
         document.addEventListener('DOMContentLoaded', () => {
+
+
             const clientesConectados = document.getElementById('clientesConectados');
 
             // Agregar un listener de clic a la lista de usuarios
@@ -76,14 +78,26 @@
 
                 }
             });
+            socket.on('reconnect', () => {//Agrege esto
+                // Solicitar la lista de usuarios solo cuando el usuario se conecta
+                socket.emit('getUsersList');
+            });
+
+
 
            
 //cuando se recibe el llamada updateUserList llamamnos la funcion actualizar lista con los datos recibidos
 
             socket.on('updateUsersList', (userList) => {
-                updateUsersList(userList);
+                updateUsersList(userList); //Agrege esto
+                const usuarioActual = userList.find((userId) => userId === socket.id);//Agrege esto
+                const usuarioActualElement = document.getElementById('usuarioActual');//Agrege esto
+                usuarioActualElement.textContent = `Tu ID: ${usuarioActual}`;//Agrege esto
+
             });
 
+            const usuarioActual = document.getElementById('usuarioActual');
+                
             function updateUsersList(userList) {
                 // Limpiar la lista existente
                 clientesConectados.innerHTML = '';
@@ -148,31 +162,38 @@
             color: #fff;
             border: 0;
             padding: 10px 20px;
-            margin-top: 10px;
             cursor: pointer;
+            border-radius: 5px; /* Ajusta el valor según tus preferencias */
         }
         
 
-        /*#listaClientes {
-            margin-top: 20px;
-            color: #000000; /* Cambié el color del texto a blanco 
-            background-color: rgb(109, 104, 141); /* Cambié el color de fondo a blanco 
-            border-radius: 10px; /* Añadí bordes redondeados 
-            padding: 10px; /* Añadí espacio interno 
-        }*/
+        #listaClientes {
+            margin-top: 120px;
+            color: #000000; /* Cambié el color del texto a blanco*/
+            background-color: rgb(109, 104, 141); /* Cambié el color de fondo a blanco*/
+            border-radius: 10px; /* Añadí bordes redondeados*/ 
+            padding: 10px; /* Añadí espacio interno*/ 
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            z-index: 2;
+        }
 
-        /*#clientesConectados {
+        #clientesConectados {
             list-style: none;
             padding: 0;  
             text-align: center;
-            margin: 0; /* Añadí margen para que no toque los bordes del contenedor 
+            margin: 0; /* Añadí margen para que no toque los bordes del contenedor*/ 
             cursor: pointer;
             
-        }*/
+        }
 
         #clientesConectados li {
             margin: 5px 0;
-            color : black
+            color: black;
+            border: 1px solid #000000; /* Añade un borde */
+            /*border-radius: 5px;Añade esquinas redondeadas */
+            padding: 8px; /* Añade espacio interno */
         }
 
         
@@ -269,34 +290,37 @@
             line-height: 200px;
             color: #ffffff;
             position: relative;
+            z-index: 1;
         }
         .texto_grupal {
             position: absolute;
-            top: 30%; 
+            top: 35%; 
             left: 25%; 
             transform: translate(-50%, -50%); 
             font-weight: bold; 
             color: #000000; 
+            font-size: 24px;
         }
-        .imagen_grupal {
-            top: 30%; 
-            left: 25%; 
-
-
-
+        .imagen_ejemplo {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .boton_entrar{
+            position: absolute;
+            top: 55%;
+            left: 25%;
+            transform: translate(-50%, -50%);
         }
 
-       
-
-
-       
     </style>
 </head>
 
 <body>
     <!--<h1>Chats</h1>-->
-    <button id="btnChatGrupal">Chat Grupal</button>
-
+    <!--<button id="btnChatGrupal">Entrar</button>-->
+    <div id="usuarioActual">Usuario:</div>
 
     <div id="listaClientes">
         <!--<h3>Da click al usuario con el que quieres tener una conversacion individual:</h3>-->
@@ -317,11 +341,13 @@
 
     <div class="rectangulo">
         <div class="texto_grupal">
-            Chat grupal
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEJElEQVR4nO2aW4iVVRTHf6aOlxAfSsIEH7yhLwmOJYkaoRF4y9AXC3wQQSaxm6USmg8h9pCCDyYVKIgIRgUhPgipo0MpWuMNnOhKUUxpmaaiNtKRJf8Du+N32d/en18q84fFcM7sdduX/157zUA37h08A7QClyT7gVmeuj2BF4B24ApwDvgEGE/FeBuopcjaHN3ewK4U3X+A56pciVqOzMzQX5OjexUYUUUirR6J7EvR7QX84aG/oYpELnoE8neK7ggP3Rpw8E5J5EKK7nDPRA5Ukch+j0D2ZrDVWQ/99VUkMssjkBkZ+qtzdK9o5SrB2oxA3srRtQP/aQb9zqdizBQ7XZTszVmJxi22GPhSK2BM9hEw7jbHfG9juUoMY6jLwClgHTDEQ/cR4H3ge12Av4tEFpQdpO3jhTJuTs4AbUAL0KQx07Utku6Q51Ps9tAZup6g1wXMK+A/F4OALzIOc7sz6y+ljPk3JZn1GXbfCPCfuRJZRupyHOgL3AecSBljBDDYsf1khr1vVUz2Kug/FQs9b16TV3JWpbES3pMxblWE/+Bbuy5fSWd0ygwvA8Y4tscCrwIdCeMfjfCfiDMFDF3V4e2nM2HfXQNe1z2RBtuOL0u/buuhCP+J8KmDak7QZqiPErFbeXYB1nnKYb1BEf4T0VbAkB1yw0h9XhHAOkv0XXOE/0S0FDC0Ujr29v5OqxDCeqccWy0B/hPRpBnLM/I1cL+W9ohu+VDWseBPaxKaCvrPxBDNWJaRYRq7SN+Ni2Cd+tY0livqPxd9NWPtYgc7WCe1nP01ZoraQGb8wQjWaRJZ2OfpBfyXhjedmimGdeqJWK1lHZZSYdT4gZbxkqrbb4AtwFRn3ATgJ6exFsI69hr82WEuwzRgq3xeVgwdqpjtd7kYpYd/XhBt2tvopx3yUNaZ7dgaBXzuodvq6NyCKWpd+gbyFzBJunUGCWGdno7/8wX8/wlMTlqJIkm4yTQ2CkJYZ2TBJGpOMv/pSvpspzQxym1EUdY5GOF/n3uwa5Fib41QTCvB/1TETrGG3m0I7nFgI3AM+E33i7HUJuCJhrGbS/D/HtqzMUbOOu+OocBuD53PnL1tPzsjY+hAzYJQA3YhTlRAzQUDclmnWc+AWqDcbJrHzIRtFcPDwC8B+uec++CdyFiCFY2NHlAQPtspr/M+wLPTX3oiHzsHuxYpT8vWtphEkppsPlLvCm4sIRGrqwzPBupbDje7e0mdjTyxghFRbGwi1jo1jAnQtUfZXJfPrYJ9Uct7WLTcqWy7dDCt0j0EbAcGBrxB8t4mfYCdwFHgV/m8rhg6FdNhxbi07D9nh27NRsnsHFaB7kS4w1bkfAnbqktN7P8VcwJZz+0TV/ZvGz54TG+QHWr1/NDwWLNH2I+i6w+B11SnpbY9u8FdjBvl29Uzg8ilOgAAAABJRU5ErkJggg==">
+            Chat grupal 
+            <img class="imagen_ejemplo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEJElEQVR4nO2aW4iVVRTHf6aOlxAfSsIEH7yhLwmOJYkaoRF4y9AXC3wQQSaxm6USmg8h9pCCDyYVKIgIRgUhPgipo0MpWuMNnOhKUUxpmaaiNtKRJf8Du+N32d/en18q84fFcM7sdduX/157zUA37h08A7QClyT7gVmeuj2BF4B24ApwDvgEGE/FeBuopcjaHN3ewK4U3X+A56pciVqOzMzQX5OjexUYUUUirR6J7EvR7QX84aG/oYpELnoE8neK7ggP3Rpw8E5J5EKK7nDPRA5Ukch+j0D2ZrDVWQ/99VUkMssjkBkZ+qtzdK9o5SrB2oxA3srRtQP/aQb9zqdizBQ7XZTszVmJxi22GPhSK2BM9hEw7jbHfG9juUoMY6jLwClgHTDEQ/cR4H3ge12Av4tEFpQdpO3jhTJuTs4AbUAL0KQx07Utku6Q51Ps9tAZup6g1wXMK+A/F4OALzIOc7sz6y+ljPk3JZn1GXbfCPCfuRJZRupyHOgL3AecSBljBDDYsf1khr1vVUz2Kug/FQs9b16TV3JWpbES3pMxblWE/+Bbuy5fSWd0ygwvA8Y4tscCrwIdCeMfjfCfiDMFDF3V4e2nM2HfXQNe1z2RBtuOL0u/buuhCP+J8KmDak7QZqiPErFbeXYB1nnKYb1BEf4T0VbAkB1yw0h9XhHAOkv0XXOE/0S0FDC0Ujr29v5OqxDCeqccWy0B/hPRpBnLM/I1cL+W9ohu+VDWseBPaxKaCvrPxBDNWJaRYRq7SN+Ni2Cd+tY0livqPxd9NWPtYgc7WCe1nP01ZoraQGb8wQjWaRJZ2OfpBfyXhjedmimGdeqJWK1lHZZSYdT4gZbxkqrbb4AtwFRn3ATgJ6exFsI69hr82WEuwzRgq3xeVgwdqpjtd7kYpYd/XhBt2tvopx3yUNaZ7dgaBXzuodvq6NyCKWpd+gbyFzBJunUGCWGdno7/8wX8/wlMTlqJIkm4yTQ2CkJYZ2TBJGpOMv/pSvpspzQxym1EUdY5GOF/n3uwa5Fib41QTCvB/1TETrGG3m0I7nFgI3AM+E33i7HUJuCJhrGbS/D/HtqzMUbOOu+OocBuD53PnL1tPzsjY+hAzYJQA3YhTlRAzQUDclmnWc+AWqDcbJrHzIRtFcPDwC8B+uec++CdyFiCFY2NHlAQPtspr/M+wLPTX3oiHzsHuxYpT8vWtphEkppsPlLvCm4sIRGrqwzPBupbDje7e0mdjTyxghFRbGwi1jo1jAnQtUfZXJfPrYJ9Uct7WLTcqWy7dDCt0j0EbAcGBrxB8t4mfYCdwFHgV/m8rhg6FdNhxbi07D9nh27NRsnsHFaB7kS4w1bkfAnbqktN7P8VcwJZz+0TV/ZvGz54TG+QHWr1/NDwWLNH2I+i6w+B11SnpbY9u8FdjBvl29Uzg8ilOgAAAABJRU5ErkJggg==">
+        </div>
+        <div class="boton_entrar">
+            <button id="btnChatGrupal">Entrar</button>
         </div>
     </div>
-
     
 </body>
 </html>

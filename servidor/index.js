@@ -18,8 +18,17 @@ const io = new Server(server, {
 const Lista_sockets = new Map();//lista donde se guarda id y objeto socket
 const solicitudesPendientes = new Map();
 const lista_sockets_en_chat = new Map();
+
+const usuariosConectados=[];//Agrege esto
 //Conexion del web socket usuarios
 io.on('connection', (socket) => {//permite escuchar las connexiones de los clientes, recuperamos el socket
+    const nuevoUsuarioID=socket.id;//Agrege esa linea
+    
+    if(!usuariosConectados.includes(nuevoUsuarioID)){//Agrege este ciclo
+        usuariosConectados.push(nuevoUsuarioID);
+    }
+    socket.emit('updateUsersList', usuariosConectados);
+    
     console.log('\nUn usuario se a conectado', socket.id)
     Lista_sockets.set(socket.id, socket);
     updateUsersList(); //Llamamos la funcion cada vez que se conecta un usuario
@@ -28,10 +37,13 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
         console.log("\nUn usuario se a desconectado", socket.id)
         Lista_sockets.delete(socket.id);//borramos de la lista el id del usuario que se salio
         updateUsersList(); //Llamamos la funcion cada vez que se desconecta un usuario
+        usuariosConectados.splice(usuariosConectados.indexOf(socket.id), 1);//Agrege esta linea
+        
+        io.emit('updateUsersList', usuariosConectados);//Agregue esta linea
     })
 
-    socket.on('chat message', async (msg) =>{ //El servidor recibe una peticion chat message
-        io.emit('chat message', msg, socket.id) //El servidor emite un broadcast con el mensaje que recibe en la funcion
+    socket.on('chat message', (msg) =>{ //El servidor recibe una peticion chat message-modifique aqui
+        io.emit('chat message', { message:msg, senderId: socket.id }); //El servidor emite un broadcast con el mensaje que recibe en la funcion
     })
      // Cuando un cliente hace la peticion Chat grupal emitimos redirect que redirecciona a otro html
      socket.on('Chat grupal', () => {
@@ -45,7 +57,7 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
     //manejo de actualizacion de la lista 
     function updateUsersList() {
         const userList = Array.from(Lista_sockets.keys());//obtenemos solo los id de la lista y hacemos broadcast al evento updateUsersList, pasando las id obtenidas
-        io.emit('updateUsersList', userList);
+        io.emit('updateUsersList', usuariosConectados);//Antes decia userList-Modifique aqui
     }
 
     socket.on('Individual_m',(msg, otro_id, salida) =>{ //cuando un cliente solicita un mensaje individual se recibe el mensaje y el id al cliente receptor
