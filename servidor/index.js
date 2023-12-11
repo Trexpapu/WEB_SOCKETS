@@ -37,7 +37,7 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
         console.log("\nUn usuario se a desconectado", socket.id)
         Lista_sockets.delete(socket.id);//borramos de la lista el id del usuario que se salio
         updateUsersList(); //Llamamos la funcion cada vez que se desconecta un usuario
-        usuariosConectados.splice(usuariosConectados.indexOf(socket.id), 1);//Agrege esta linea
+        usuariosConectados.splice(usuariosConectados.indexOf(socket.id),1);//Agrege esta linea
         
         io.emit('updateUsersList', usuariosConectados);//Agregue esta linea
     })

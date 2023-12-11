@@ -18,13 +18,10 @@
             alert('El usuario con el que conversabas se fue a otro chat');
             salida = true
         })
-
 //redireccionamos al cliente a html chat grupal 
         socket.on('redirect', () => {
             console.log("Te vas a chat grupal")
             window.location.href='/grupo';
-          
-        
         });
 //hacemos visible el chat individual
         socket.on('redirect2', (id) => {
@@ -32,17 +29,13 @@
             otro_id = id;
             console.log(otro_id)
              // Muestra el chat al recibir el evento 'redirect2'
-            document.getElementById('chat').style.display = 'flex';
-         
+            document.getElementById('chat').style.display = 'flex';         
         }) 
-
         //si el usuario le da click al boton chat grupal
 
         document.getElementById('btnChatGrupal').addEventListener('click', () => {
             socket.emit('Chat grupal');
         });
-
- 
 //cuando un cliente le llega la solicitud se abre una ventana para aceptar
         socket.on('Solicitud de chat', (solicitud) => {
             const respuesta = window.confirm(`${solicitud.remitente} ¿Aceptar chat?`);
@@ -56,11 +49,7 @@
         socket.on('En espera de solicitud de chat', (bool)=>{
             solicitud_pendiente = bool
         })
-
-
-
         document.addEventListener('DOMContentLoaded', () => {
-
 
             const clientesConectados = document.getElementById('clientesConectados');
 
@@ -82,9 +71,6 @@
                 // Solicitar la lista de usuarios solo cuando el usuario se conecta
                 socket.emit('getUsersList');
             });
-
-
-
            
 //cuando se recibe el llamada updateUserList llamamnos la funcion actualizar lista con los datos recibidos
 
@@ -93,7 +79,11 @@
                 const usuarioActual = userList.find((userId) => userId === socket.id);//Agrege esto
                 const usuarioActualElement = document.getElementById('usuarioActual');//Agrege esto
                 usuarioActualElement.textContent = `Tu ID: ${usuarioActual}`;//Agrege esto
-
+                usuarioActualElement.style.color = 'black';
+                usuarioActualElement.style.position = 'relative';
+                usuarioActualElement.style.left = '14%';
+                usuarioActualElement.style.top= '10%';
+                usuarioActualElement.style.zIndex = '2';
             });
 
             const usuarioActual = document.getElementById('usuarioActual');
@@ -109,24 +99,17 @@
                     clientesConectados.appendChild(listItem);
         });
     }
-
- 
-
 });
-
-
 //mensajes individuales
         const form = document.getElementById('form')
         const input = document.getElementById('input')
       
-
         //mensajes
         const messages = document.getElementById('messages')
         socket.on('Mensaje_individual', (msg)=>{
             const item = `<li>${msg}</li>`
             messages.insertAdjacentHTML('beforeend', item)//insertamos el elemento en el html, es decir el mensaje
         })
-
         //le mandamos el texto al socket al presionar input y reseteamos el input
         form.addEventListener('submit', (e)=>{
             e.preventDefault()
@@ -135,7 +118,6 @@
                 input.value = ''
             }
         })  
-    
     </script>
     <style>
         /* Estilo de la lista de usuarios conectados*/
@@ -150,13 +132,11 @@
             justify-content: center;
             height: 10vh;
         }
-
         h1 {
             color: #FFFF;
             text-align: center;
             margin: 0; /* Asegura que no haya espacio adicional alrededor del título */
         }
-
         button {
             background-color: #006400;
             color: #fff;
@@ -164,21 +144,19 @@
             padding: 10px 20px;
             cursor: pointer;
             border-radius: 5px; /* Ajusta el valor según tus preferencias */
-        }
         
-
+        }
         #listaClientes {
             margin-top: 120px;
-            color: #000000; /* Cambié el color del texto a blanco*/
-            background-color: rgb(109, 104, 141); /* Cambié el color de fondo a blanco*/
+            color: #fffafa; /* Cambié el color del texto a blanco*/
+            background-color: #006400; /* Cambié el color de fondo a blanco*/
             border-radius: 10px; /* Añadí bordes redondeados*/ 
             padding: 10px; /* Añadí espacio interno*/ 
             position: absolute;
-            top: 30px;
-            right: 50px;
+            top: 24%;
+            right: 28%;
             z-index: 2;
         }
-
         #clientesConectados {
             list-style: none;
             padding: 0;  
@@ -187,16 +165,71 @@
             cursor: pointer;
             
         }
-
         #clientesConectados li {
             margin: 5px 0;
-            color: black;
-            border: 1px solid #000000; /* Añade un borde */
+            color: rgb(255, 255, 255);
+            border: 1px solid #ffffff; /* Añade un borde */
             /*border-radius: 5px;Añade esquinas redondeadas */
             padding: 8px; /* Añade espacio interno */
         }
-
-        
+        .rectangulo {
+            width: 1000px; 
+            height: 600px; 
+            background: linear-gradient(to right, #6D8764 50%, #f8f9fa 50%);
+            border-radius: 20px;
+            text-align: center;
+            line-height: 200px;
+            color: #ffffff;
+            position: relative;
+            z-index: 1;
+        }
+        .texto_grupal {
+            position: absolute;
+            top: 35%; 
+            left: 25%; 
+            transform: translate(-50%, -50%); 
+            font-weight: bold; 
+            color: #000000; 
+            font-size: 24px;
+        }
+        .imagen_ejemplo {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .boton_entrar{
+            position: absolute;
+            top: 55%;
+            left: 25%;
+            transform: translate(-50%, -50%);
+        }
+        .texto_individual{
+            position: absolute;
+            top: 8%; 
+            left: 75%; 
+            transform: translate(-50%, -50%); 
+            font-weight: bold; 
+            color: #000000; 
+            font-size: 24px;
+        }
+        .texto_conectados{
+            position: absolute;
+            top: 23%; 
+            left: 64%; 
+            transform: translate(-50%, -50%); 
+            font-weight: bold; 
+            color: #000000; 
+            font-size: 79%;
+        }
+        .texto_usuarios_conectados{
+            position: absolute;
+            top: 28%; 
+            left: 71%; 
+            transform: translate(-50%, -50%);  
+            color: #000000; 
+            font-size: 78%;
+        }
 
         /* Estilo chat*/
         *,
@@ -241,18 +274,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgb(0, 0, 0); /* Ajusta el color de fondo según tu preferencia */
+            background-color: rgb(56, 54, 54); /* Ajusta el color de fondo según tu preferencia */
             z-index: 9999; /* Asegura que el chat esté en la parte superior */
             display: flex;
             flex-direction: column;
             display: none; /* Oculta el chat inicialmente */
         }
-
         #messages {
             flex: 1;
             overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
         }
-
         #form {
             display: flex;
             align-items: center;
@@ -268,7 +299,6 @@
             margin: 4px;
             padding: 0 8px;
         }
-
         #form > button {
             background: #09f;
             color: #fff;
@@ -276,47 +306,11 @@
             margin: 4px;
             border-radius: 4px;
         }
-
         #form > button:hover {
             background: #0cf;
         }
-
-        .rectangulo {
-            width: 1000px; 
-            height: 600px; 
-            background: linear-gradient(to right, #6D8764 50%, #f8f9fa 50%);
-            border-radius: 20px;
-            text-align: center;
-            line-height: 200px;
-            color: #ffffff;
-            position: relative;
-            z-index: 1;
-        }
-        .texto_grupal {
-            position: absolute;
-            top: 35%; 
-            left: 25%; 
-            transform: translate(-50%, -50%); 
-            font-weight: bold; 
-            color: #000000; 
-            font-size: 24px;
-        }
-        .imagen_ejemplo {
-            position: absolute;
-            top: 80%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .boton_entrar{
-            position: absolute;
-            top: 55%;
-            left: 25%;
-            transform: translate(-50%, -50%);
-        }
-
     </style>
 </head>
-
 <body>
     <!--<h1>Chats</h1>-->
     <!--<button id="btnChatGrupal">Entrar</button>-->
@@ -324,13 +318,9 @@
 
     <div id="listaClientes">
         <!--<h3>Da click al usuario con el que quieres tener una conversacion individual:</h3>-->
-        <ul id="clientesConectados">
-            
+        <ul id="clientesConectados">   
         </ul>
     </div>
-
-
-
     <div id="chat">
         <ul id="messages"></ul>
         <form id="form">
@@ -338,16 +328,23 @@
             <button type="submit">Enviar</button>
         </form>
     </div>
-
     <div class="rectangulo">
         <div class="texto_grupal">
             Chat grupal 
             <img class="imagen_ejemplo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEJElEQVR4nO2aW4iVVRTHf6aOlxAfSsIEH7yhLwmOJYkaoRF4y9AXC3wQQSaxm6USmg8h9pCCDyYVKIgIRgUhPgipo0MpWuMNnOhKUUxpmaaiNtKRJf8Du+N32d/en18q84fFcM7sdduX/157zUA37h08A7QClyT7gVmeuj2BF4B24ApwDvgEGE/FeBuopcjaHN3ewK4U3X+A56pciVqOzMzQX5OjexUYUUUirR6J7EvR7QX84aG/oYpELnoE8neK7ggP3Rpw8E5J5EKK7nDPRA5Ukch+j0D2ZrDVWQ/99VUkMssjkBkZ+qtzdK9o5SrB2oxA3srRtQP/aQb9zqdizBQ7XZTszVmJxi22GPhSK2BM9hEw7jbHfG9juUoMY6jLwClgHTDEQ/cR4H3ge12Av4tEFpQdpO3jhTJuTs4AbUAL0KQx07Utku6Q51Ps9tAZup6g1wXMK+A/F4OALzIOc7sz6y+ljPk3JZn1GXbfCPCfuRJZRupyHOgL3AecSBljBDDYsf1khr1vVUz2Kug/FQs9b16TV3JWpbES3pMxblWE/+Bbuy5fSWd0ygwvA8Y4tscCrwIdCeMfjfCfiDMFDF3V4e2nM2HfXQNe1z2RBtuOL0u/buuhCP+J8KmDak7QZqiPErFbeXYB1nnKYb1BEf4T0VbAkB1yw0h9XhHAOkv0XXOE/0S0FDC0Ujr29v5OqxDCeqccWy0B/hPRpBnLM/I1cL+W9ohu+VDWseBPaxKaCvrPxBDNWJaRYRq7SN+Ni2Cd+tY0livqPxd9NWPtYgc7WCe1nP01ZoraQGb8wQjWaRJZ2OfpBfyXhjedmimGdeqJWK1lHZZSYdT4gZbxkqrbb4AtwFRn3ATgJ6exFsI69hr82WEuwzRgq3xeVgwdqpjtd7kYpYd/XhBt2tvopx3yUNaZ7dgaBXzuodvq6NyCKWpd+gbyFzBJunUGCWGdno7/8wX8/wlMTlqJIkm4yTQ2CkJYZ2TBJGpOMv/pSvpspzQxym1EUdY5GOF/n3uwa5Fib41QTCvB/1TETrGG3m0I7nFgI3AM+E33i7HUJuCJhrGbS/D/HtqzMUbOOu+OocBuD53PnL1tPzsjY+hAzYJQA3YhTlRAzQUDclmnWc+AWqDcbJrHzIRtFcPDwC8B+uec++CdyFiCFY2NHlAQPtspr/M+wLPTX3oiHzsHuxYpT8vWtphEkppsPlLvCm4sIRGrqwzPBupbDje7e0mdjTyxghFRbGwi1jo1jAnQtUfZXJfPrYJ9Uct7WLTcqWy7dDCt0j0EbAcGBrxB8t4mfYCdwFHgV/m8rhg6FdNhxbi07D9nh27NRsnsHFaB7kS4w1bkfAnbqktN7P8VcwJZz+0TV/ZvGz54TG+QHWr1/NDwWLNH2I+i6w+B11SnpbY9u8FdjBvl29Uzg8ilOgAAAABJRU5ErkJggg==">
         </div>
+        <div class="texto_individual">
+            Chat individual
+        </div>
+        <div class="texto_conectados">
+            Click en un usuario para solicitar mensaje: 
+        </div>
+        <div class="texto_usuarios_conectados">
+            Usuarios conectados:
+        </div>
         <div class="boton_entrar">
             <button id="btnChatGrupal">Entrar</button>
         </div>
-    </div>
-    
+    </div>    
 </body>
-</html>
+</html> 
