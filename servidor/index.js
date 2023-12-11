@@ -1,5 +1,4 @@
 import express from 'express' //Framework para una infrestuctura web y APIS
-import morgan from 'morgan' //Dependencia para peticiones de express
 import logger from 'morgan' // importamos el logger de morgan
 
 
@@ -16,7 +15,6 @@ const io = new Server(server, {
 }) //Creando servidor io
 
 const Lista_sockets = new Map();//lista donde se guarda id y objeto socket
-const solicitudesPendientes = new Map();
 const lista_sockets_en_chat = new Map();
 
 const usuariosConectados=[];//Agrege esto
@@ -102,14 +100,12 @@ io.on('connection', (socket) => {//permite escuchar las connexiones de los clien
         if  (socket.id !== id_remitente) {
             if (socket_en_chat){
                 socket.emit('Avisar_que_salio')
-                console.log("xd")
             }
             lista_sockets_en_chat.set(id_remitente, socketRemitente);
             lista_sockets_en_chat.set(socket.id, socket);
             socket.emit('redirect2', id_remitente)
             socketRemitente.emit('redirect2', socket.id)
 
-            console.log(lista_sockets_en_chat)
         }
 
     });
